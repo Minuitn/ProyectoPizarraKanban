@@ -1,32 +1,75 @@
 
 package PizarraKanban;
 
-import PizarraKanban.ConexioDB.ConexionDB;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 
-/**
- *
- * @author minu
- */
+public class TareaController implements ActionListener {
 
-public class TareaController {
+    private TareaView vista;
+    private TareaAccesoD dao;   
 
-    public boolean guardarTarea(Tarea tarea) {
-        String sql = "INSERT INTO tareas (descripcion, estado, prioridad, responsable) VALUES (?, ?, ?, ?)";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, tarea.getDescripcion());
-            ps.setString(2, tarea.getEstado().name());
-            ps.setString(3, tarea.getPrioridad());
-            ps.setString(4, tarea.getResponsable());
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+    public TareaController(TareaView vista) {
+        this.vista = vista;
+        this.dao = new TareaAccesoD();  // Crear instancia correctamente
+
+        // Escuchar botones
+        this.vista.btnAgregar.addActionListener(this);
+        this.vista.btnActualizar.addActionListener(this);
+
+        cargarTablas();
+    }
+
+    private void cargarTablas() {
+        // De momento las 3 tablas muestran toda la lista (MVP)
+        vista.tablaPorHacer.setModel(dao.listar());
+        vista.tablaEnProgreso.setModel(dao.listar());
+        vista.tablaCompletado.setModel(dao.listar());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        // BOTÓN AGREGAR
+        if (e.getSource() == vista.btnAgregar) {
+
+            try {
+                String desc = JOptionPane.showInputDialog("Descripción:");
+                String prio = JOptionPane.showInputDialog("Prioridad:");
+                String resp = JOptionPane.showInputDialog("Responsable:");
+
+                if (desc == null || desc.trim().isEmpty() ||
+                    prio == null || prio.trim().isEmpty() ||
+                    resp == null || resp.trim().isEmpty()) {
+
+                    JOptionPane.showMessageDialog(null, "Debes completar todos los campos.");
+                    return;
+                }
+
+                Estado estado = Estado.POR_HACER;
+
+                // Crear objeto tarea
+                Tarea t = new Tarea(0, desc, estado, prio, resp);
+
+                // Guardar en DB
+                dao.agregar(t);
+
+                // Refrescar tablas
+                cargarTablas();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Ocurrió un error al agregar la tarea.");
+                System.out.println("Error: " + ex.toString());
+            }
+        }
+
+        // BOTÓN ACTUALIZAR
+        if (e.getSource() == vista.btnActualizar) {
+            cargarTablas();
         }
     }
 }
+
+
 
