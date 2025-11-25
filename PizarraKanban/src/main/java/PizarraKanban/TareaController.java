@@ -25,11 +25,7 @@ public class TareaController implements ActionListener {
     this.vista.btnEliminar.addActionListener(this); // BOTÓN ELIMINAR
 
     cargarTablas();
-        
-
-
-        cargarTablas();
-    }
+            }
 
     private void cargarTablas() {
         // cada tabla solo muestra su estado
