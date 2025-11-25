@@ -11,6 +11,7 @@ public class TareaAccesoD {
 
     // LISTAR TODAS LAS TAREAS
     public DefaultTableModel listar() {
+        
 
         ConexionDB conexion = new ConexionDB();
         DefaultTableModel modelo = new DefaultTableModel() {
@@ -131,5 +132,75 @@ public class TareaAccesoD {
             conexion.desconectar();
         }
     }
+        // LISTAR TAREAS POR ESTADO (para cada columna de la pizarra)
+    public DefaultTableModel listarPorEstado(Estado estado) {
+
+        ConexionDB conexion = new ConexionDB();
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Descripción");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Prioridad");
+        modelo.addColumn("Responsable");
+
+        String datos[] = new String[5];
+
+        String sql = "SELECT * FROM tareas WHERE estado = ?";
+
+        try {
+            CallableStatement cs = conexion.conectar().prepareCall(sql);
+            cs.setString(1, estado.toString());
+            ResultSet rs = cs.executeQuery();
+
+            while (rs.next()) {
+                datos[0] = String.valueOf(rs.getInt("id"));
+                datos[1] = rs.getString("descripcion");
+                datos[2] = rs.getString("estado");
+                datos[3] = rs.getString("prioridad");
+                datos[4] = rs.getString("responsable");
+
+                modelo.addRow(datos);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al consultar las tareas por estado.");
+            System.out.println("Error Consulta: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+
+        return modelo;
+    }
+        // ACTUALIZAR SOLO EL ESTADO DE UNA TAREA (mover entre columnas)
+    public void actualizarEstado(int id, Estado nuevoEstado) {
+
+        ConexionDB conexion = new ConexionDB();
+
+        String sql = "UPDATE tareas SET estado = ? WHERE id = ?";
+
+        try {
+            CallableStatement cs = conexion.conectar().prepareCall(sql);
+            cs.setString(1, nuevoEstado.toString());
+            cs.setInt(2, id);
+
+            cs.execute();
+
+            JOptionPane.showMessageDialog(null, "Estado de la tarea actualizado.");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar el estado de la tarea.");
+            System.out.println("Error SQL: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+    }
+
+
 }
 

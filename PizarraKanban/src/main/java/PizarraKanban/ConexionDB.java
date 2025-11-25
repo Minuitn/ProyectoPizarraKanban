@@ -6,18 +6,23 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    private String url = "jdbc:mysql://localhost:3306/";
-    private String db = "PizarraKanbanDB";
-    private String user = "root";
-    private String password = "TU_PASSWORD";
+    // URL base (con parámetros recomendados para MySQL 8)
+    private String url = "jdbc:mysql://localhost:3306/pizarra_kanban?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+    // Datos de conexión que creamos en MySQL
+    private String user = "kanban_user";
+    private String password = "Kanban123!";
+
     private String driver = "com.mysql.cj.jdbc.Driver";
 
-    private Connection connection;  // ESTA LÍNEA ES LA QUE FALTABA
+    private Connection connection;
 
     public Connection conectar() {
         try {
             Class.forName(driver);
-            connection = DriverManager.getConnection(url + db, user, password);
+            // Ya no concatenamos db, va incluida en la URL
+            connection = DriverManager.getConnection(url, user, password);
+            System.out.println("Conexión exitosa a la base de datos.");
             return connection;
         } catch (ClassNotFoundException ex) {
             System.out.println("Error class: " + ex.toString());
@@ -31,11 +36,13 @@ public class ConexionDB {
         if (connection != null) {
             try {
                 connection.close();
+                System.out.println("Conexión cerrada.");
             } catch (SQLException ex) {
-                System.out.println("Error SQL: " + ex.toString());
+                System.out.println("Error SQL al cerrar: " + ex.toString());
             }
         }
     }
 }
+
 
 
