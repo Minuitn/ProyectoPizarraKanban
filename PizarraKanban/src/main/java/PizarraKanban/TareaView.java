@@ -4,7 +4,6 @@
  */
 package PizarraKanban;
 /**
- *se mejoro tareaview
  * @author shey
  */
 import javax.swing.*;
@@ -29,7 +28,6 @@ public class TareaView extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // PANEL SUPERIOR DE BOTONES
         JPanel panelBotones = new JPanel();
 
         btnAgregar = new JButton("Agregar tarea");
@@ -42,7 +40,6 @@ public class TareaView extends JFrame {
 
         add(panelBotones, BorderLayout.NORTH);
 
-        // PANEL CENTRAL CON LAS TRES COLUMNAS
         JPanel panelTablas = new JPanel(new GridLayout(1, 3));
 
         tablaPorHacer = new JTable();
@@ -55,7 +52,6 @@ public class TareaView extends JFrame {
 
         add(panelTablas, BorderLayout.CENTER);
 
-        // PANEL INFERIOR CON BOTONES PARA MOVER TAREAS
         btnMoverPorHacer = new JButton("Mover a POR HACER");
         btnMoverEnProgreso = new JButton("Mover a EN PROGRESO");
         btnMoverCompletado = new JButton("Mover a COMPLETADO");
@@ -68,7 +64,6 @@ public class TareaView extends JFrame {
         add(panelMover, BorderLayout.SOUTH);
     }
 
-    // Panel pequeño para cada columna (título + tabla con scroll)
     private JPanel crearPanelColumna(String titulo, JTable tabla) {
         JPanel panel = new JPanel(new BorderLayout());
         JLabel etiqueta = new JLabel(titulo, SwingConstants.CENTER);
