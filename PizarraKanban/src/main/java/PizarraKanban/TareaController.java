@@ -9,26 +9,27 @@ import javax.swing.JTable;
 public class TareaController implements ActionListener {
 
     private TareaView vista;
-    private TareaAccesoD dao;   
+    private TareaAccesoD dao;
 
     public TareaController(TareaView vista) {
-         this.vista = vista;
-    this.dao = new TareaAccesoD();
+        this.vista = vista;
+        this.dao = new TareaAccesoD();
 
-    this.vista.btnAgregar.addActionListener(this);
-    this.vista.btnActualizar.addActionListener(this);
+        // Eventos de botones
+        this.vista.btnAgregar.addActionListener(this);
+        this.vista.btnActualizar.addActionListener(this);
 
-    this.vista.btnMoverPorHacer.addActionListener(this);
-    this.vista.btnMoverEnProgreso.addActionListener(this);
-    this.vista.btnMoverCompletado.addActionListener(this);
+        this.vista.btnMoverPorHacer.addActionListener(this);
+        this.vista.btnMoverEnProgreso.addActionListener(this);
+        this.vista.btnMoverCompletado.addActionListener(this);
 
-    this.vista.btnEliminar.addActionListener(this); // BOTÓN ELIMINAR
+        this.vista.btnEliminar.addActionListener(this);
 
-    cargarTablas();
-            }
+        cargarTablas(); // carga inicial
+    }
 
+    // Cargar cada estado de la pizarra
     private void cargarTablas() {
-        // cada tabla solo muestra su estado
         vista.tablaPorHacer.setModel(dao.listarPorEstado(Estado.POR_HACER));
         vista.tablaEnProgreso.setModel(dao.listarPorEstado(Estado.EN_PROGRESO));
         vista.tablaCompletado.setModel(dao.listarPorEstado(Estado.COMPLETADO));
@@ -37,7 +38,7 @@ public class TareaController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        // BOTÓN AGREGAR
+        // AGREGAR
         if (e.getSource() == vista.btnAgregar) {
 
             try {
@@ -53,132 +54,119 @@ public class TareaController implements ActionListener {
                     return;
                 }
 
-                Estado estado = Estado.POR_HACER;
-
-                // Crear objeto tarea
-                Tarea t = new Tarea(0, desc, estado, prio, resp);
-
-                // Guardar en DB
+                Tarea t = new Tarea(0, desc, Estado.POR_HACER, prio, resp);
                 dao.agregar(t);
-
-                // Refrescar tablas
                 cargarTablas();
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Ocurrió un error al agregar la tarea.");
                 System.out.println("Error: " + ex.toString());
             }
-            
-        } // ️ AQUÍ cierra SOLO el if de AGREGAR
+        }
 
-        // BOTÓN MOVER A POR_HACER
+        // MOVER POR HACER
         if (e.getSource() == vista.btnMoverPorHacer) {
             moverTareaAEstado(Estado.POR_HACER);
         }
 
-        // BOTÓN MOVER A EN_PROGRESO
+        // MOVER EN PROGRESO
         if (e.getSource() == vista.btnMoverEnProgreso) {
             moverTareaAEstado(Estado.EN_PROGRESO);
         }
 
-        // BOTÓN MOVER A COMPLETADO
+        // MOVER COMPLETADO
         if (e.getSource() == vista.btnMoverCompletado) {
             moverTareaAEstado(Estado.COMPLETADO);
         }
 
-        // BOTÓN ACTUALIZAR
+        // ACTUALIZAR
         if (e.getSource() == vista.btnActualizar) {
             cargarTablas();
         }
-        //BOTÓN ELIMINAR
-        if (e.getSource() == vista.btnEliminar) {
-    eliminarTareaSeleccionada();
-}
 
+        // ELIMINAR
+        if (e.getSource() == vista.btnEliminar) {
+            eliminarTareaSeleccionada();
+        }
     }
 
+    // Cambiar estado de una tarea
     private void moverTareaAEstado(Estado nuevoEstado) {
-
         try {
-            int filaSeleccionada = -1;
             JTable tablaSeleccionada = null;
+            int fila = -1;
 
-            // Revisar en cuál tabla hay una fila seleccionada
             if (vista.tablaPorHacer.getSelectedRow() != -1) {
                 tablaSeleccionada = vista.tablaPorHacer;
-                filaSeleccionada = vista.tablaPorHacer.getSelectedRow();
+                fila = vista.tablaPorHacer.getSelectedRow();
             } else if (vista.tablaEnProgreso.getSelectedRow() != -1) {
                 tablaSeleccionada = vista.tablaEnProgreso;
-                filaSeleccionada = vista.tablaEnProgreso.getSelectedRow();
+                fila = vista.tablaEnProgreso.getSelectedRow();
             } else if (vista.tablaCompletado.getSelectedRow() != -1) {
                 tablaSeleccionada = vista.tablaCompletado;
-                filaSeleccionada = vista.tablaCompletado.getSelectedRow();
+                fila = vista.tablaCompletado.getSelectedRow();
             }
 
-            if (tablaSeleccionada == null || filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(null, "Debes seleccionar una tarea en alguna tabla.");
+            if (tablaSeleccionada == null || fila == -1) {
+                JOptionPane.showMessageDialog(null, "Debes seleccionar una tarea.");
                 return;
             }
 
-            // La columna 0 es el ID (según el modelo que pusimos en el DAO)
-            int id = Integer.parseInt(tablaSeleccionada.getValueAt(filaSeleccionada, 0).toString());
+            int id = Integer.parseInt(
+                tablaSeleccionada.getValueAt(fila, 0).toString()
+            );
 
-            // Actualizar en BD
             dao.actualizarEstado(id, nuevoEstado);
-
-            // Recargar tablas
             cargarTablas();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al mover la tarea de estado.");
+            JOptionPane.showMessageDialog(null, "Error al mover la tarea.");
             System.out.println("Error mover estado: " + ex.toString());
         }
     }
+
+    // Eliminar tarea con confirmación
     private void eliminarTareaSeleccionada() {
-    try {
-        int filaSeleccionada = -1;
-        JTable tablaSeleccionada = null;
+        try {
+            JTable tablaSeleccionada = null;
+            int fila = -1;
 
-        // Buscar en cuál tabla está seleccionada la tarea
-        if (vista.tablaPorHacer.getSelectedRow() != -1) {
-            tablaSeleccionada = vista.tablaPorHacer;
-            filaSeleccionada = vista.tablaPorHacer.getSelectedRow();
-        } else if (vista.tablaEnProgreso.getSelectedRow() != -1) {
-            tablaSeleccionada = vista.tablaEnProgreso;
-            filaSeleccionada = vista.tablaEnProgreso.getSelectedRow();
-        } else if (vista.tablaCompletado.getSelectedRow() != -1) {
-            tablaSeleccionada = vista.tablaCompletado;
-            filaSeleccionada = vista.tablaCompletado.getSelectedRow();
-        }
+            if (vista.tablaPorHacer.getSelectedRow() != -1) {
+                tablaSeleccionada = vista.tablaPorHacer;
+                fila = vista.tablaPorHacer.getSelectedRow();
+            } else if (vista.tablaEnProgreso.getSelectedRow() != -1) {
+                tablaSeleccionada = vista.tablaEnProgreso;
+                fila = vista.tablaEnProgreso.getSelectedRow();
+            } else if (vista.tablaCompletado.getSelectedRow() != -1) {
+                tablaSeleccionada = vista.tablaCompletado;
+                fila = vista.tablaCompletado.getSelectedRow();
+            }
 
-        if (tablaSeleccionada == null || filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(null, "Selecciona una tarea para eliminar.");
-            return;
-        }
+            if (tablaSeleccionada == null || fila == -1) {
+                JOptionPane.showMessageDialog(null, "Selecciona una tarea para eliminar.");
+                return;
+            }
 
-        // Obtener id de la tarea (columna 0)
-        int id = Integer.parseInt(
-                tablaSeleccionada.getValueAt(filaSeleccionada, 0).toString()
-        );
+            int id = Integer.parseInt(
+                tablaSeleccionada.getValueAt(fila, 0).toString()
+            );
 
-        // Confirmación
-        int confirm = JOptionPane.showConfirmDialog(
+            int confirm = JOptionPane.showConfirmDialog(
                 null,
                 "¿Seguro que deseas eliminar esta tarea?",
                 "Confirmar eliminación",
                 JOptionPane.YES_NO_OPTION
-        );
+            );
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            dao.eliminar(id);
-            cargarTablas();
+            if (confirm == JOptionPane.YES_OPTION) {
+                dao.eliminar(id);
+                cargarTablas();
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar la tarea.");
+            System.out.println("Error: " + ex.toString());
         }
-
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, "Error al eliminar la tarea.");
-        System.out.println("Error: " + ex.toString());
     }
 }
 
-
-}

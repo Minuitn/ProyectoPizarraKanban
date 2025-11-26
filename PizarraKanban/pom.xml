@@ -12,7 +12,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>24</maven.compiler.release>
+
+        <!-- Usamos Java 17 para máxima compatibilidad -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Clase main CORRECTA -->
         <exec.mainClass>PizarraKanban.Main</exec.mainClass>
@@ -20,19 +24,11 @@
 
     <dependencies>
 
-        <!-- CONECTOR MYSQL (NECESARIO PARA com.mysql.cj.jdbc.Driver) -->
+        <!-- Conector MySQL -->
         <dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.33</version>
-</dependency>
-
-
-        <!-- Necesario para ejecutar programas Java -->
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
     </dependencies>
@@ -40,7 +36,7 @@
     <build>
         <plugins>
 
-            <!-- Permite ejecutar el main con Maven -->
+            <!-- Plugin para ejecutar el main -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -54,3 +50,4 @@
     </build>
 
 </project>
+

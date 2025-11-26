@@ -1,14 +1,18 @@
+
 package PizarraKanban;
-
-
 
 public class Main {
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 
-        TareaView vista = new TareaView();
-        TareaController controller = new TareaController(vista);
+        LoginView login = new LoginView();
+        LoginController controller = new LoginController(login);
 
-        vista.setVisible(true);
+        login.setVisible(true);
+       // Probar hash admin123 contra lo que hay en BD
+
+
     }
+    
 }
+

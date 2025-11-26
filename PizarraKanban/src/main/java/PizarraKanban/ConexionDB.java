@@ -6,43 +6,40 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    // URL base (con parámetros recomendados para MySQL 8)
-    private String url = "jdbc:mysql://localhost:3306/pizarra_kanban?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    private Connection conn;
 
-    // Datos de conexión que creamos en MySQL
-    private String user = "kanban_user";
-    private String password = "Kanban123!";
-
-    private String driver = "com.mysql.cj.jdbc.Driver";
-
-    private Connection connection;
+    private final String URL = "jdbc:mysql://localhost:3306/PizarraKanbanDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    private final String USER = "kanban_user";
+    private final String PASS = "Kanban123!";
 
     public Connection conectar() {
         try {
-            Class.forName(driver);
-            // Ya no concatenamos db, va incluida en la URL
-            connection = DriverManager.getConnection(url, user, password);
-            System.out.println("Conexión exitosa a la base de datos.");
-            return connection;
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error class: " + ex.toString());
-        } catch (SQLException ex) {
-            System.out.println("Error SQL: " + ex.toString());
+            if (conn == null || conn.isClosed()) {
+                conn = DriverManager.getConnection(URL, USER, PASS);
+                System.out.println("Conexión exitosa a MySQL.");
+                System.out.println("Conectado a URL = " + URL);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error en la conexión: " + e.getMessage());
+            conn = null;
         }
-        return null;
+        return conn;
     }
 
     public void desconectar() {
-        if (connection != null) {
-            try {
-                connection.close();
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
                 System.out.println("Conexión cerrada.");
-            } catch (SQLException ex) {
-                System.out.println("Error SQL al cerrar: " + ex.toString());
             }
+        } catch (SQLException e) {
+            System.out.println("Error al desconectar: " + e.getMessage());
         }
     }
 }
+
+
+
 
 
 
