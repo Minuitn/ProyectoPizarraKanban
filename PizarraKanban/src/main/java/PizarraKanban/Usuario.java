@@ -1,10 +1,11 @@
 
 package PizarraKanban;
 
+// Modelo de usuario
 public class Usuario {
     private int id;
     private String username;
-    private String passwordHash; // contraseña ya hasheada
+    private String passwordHash;
     private String rol;
 
     public Usuario(int id, String username, String passwordHash, String rol) {
@@ -14,7 +15,6 @@ public class Usuario {
         this.rol = rol;
     }
 
-    // Getters y setters
     public int getId() { return id; }
     public String getUsername() { return username; }
     public String getPasswordHash() { return passwordHash; }
@@ -25,4 +25,5 @@ public class Usuario {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public void setRol(String rol) { this.rol = rol; }
 }
+
 

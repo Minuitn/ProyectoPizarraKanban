@@ -1,7 +1,9 @@
+
 package PizarraKanban;
 
 import java.security.MessageDigest;
 
+// Util para hashing SHA-256 (visto en clase)
 public class SeguridadUtil {
 
     public static String hashSHA256(String texto) {
@@ -22,4 +24,5 @@ public class SeguridadUtil {
         }
     }
 }
+
 

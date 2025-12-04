@@ -1,24 +1,18 @@
 package PizarraKanban;
 
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+// Acceso a datos para tareas (CRUD)
 public class TareaAccesoD {
 
-    // LISTAR TODAS LAS TAREAS
-    public DefaultTableModel listar() {
-        
+    // listar por estado (estado como String)
+    public DefaultTableModel listarPorEstado(String estado) {
 
         ConexionDB conexion = new ConexionDB();
         DefaultTableModel modelo = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
 
         modelo.addColumn("ID");
@@ -27,145 +21,22 @@ public class TareaAccesoD {
         modelo.addColumn("Prioridad");
         modelo.addColumn("Responsable");
 
-        String datos[] = new String[5];
+        String sql = "SELECT * FROM tareas WHERE estado = ? ORDER BY id ASC";
 
-        try {
-            Statement stmt = conexion.conectar().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM tareas");
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                datos[0] = String.valueOf(rs.getInt("id"));
-                datos[1] = rs.getString("descripcion");
-                datos[2] = rs.getString("estado");
-                datos[3] = rs.getString("prioridad");
-                datos[4] = rs.getString("responsable");
-
-                modelo.addRow(datos);
-            }
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al consultar las tareas.");
-            System.out.println("Error Consulta: " + ex.toString());
-        } finally {
-            conexion.desconectar();
-        }
-
-        return modelo;
-    }
-
-    // AGREGAR TAREA
-    public void agregar(Tarea t) {
-
-        ConexionDB conexion = new ConexionDB();
-
-        String sql = "INSERT INTO tareas (descripcion, estado, prioridad, responsable) VALUES (?, ?, ?, ?)";
-
-        try {
-            CallableStatement cs = conexion.conectar().prepareCall(sql);
-
-            cs.setString(1, t.getDescripcion());
-            cs.setString(2, t.getEstado().toString());
-            cs.setString(3, t.getPrioridad());
-            cs.setString(4, t.getResponsable());
-
-            cs.execute();
-
-            JOptionPane.showMessageDialog(null, "Tarea agregada correctamente.");
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al agregar la tarea.");
-            System.out.println("Error SQL: " + ex.toString());
-        } finally {
-            conexion.desconectar();
-        }
-    }
-
-    // EDITAR TAREA
-    public void editar(Tarea t) {
-
-        ConexionDB conexion = new ConexionDB();
-
-        String sql = "UPDATE tareas SET descripcion = ?, estado = ?, prioridad = ?, responsable = ? WHERE id = ?";
-
-        try {
-            CallableStatement cs = conexion.conectar().prepareCall(sql);
-
-            cs.setString(1, t.getDescripcion());
-            cs.setString(2, t.getEstado().toString());
-            cs.setString(3, t.getPrioridad());
-            cs.setString(4, t.getResponsable());
-            cs.setInt(5, t.getId());
-
-            cs.execute();
-
-            JOptionPane.showMessageDialog(null, "Tarea modificada correctamente.");
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al modificar la tarea.");
-            System.out.println("Error SQL: " + ex.toString());
-        } finally {
-            conexion.desconectar();
-        }
-    }
-
-    // ELIMINAR TAREA
-    public void eliminar(int id) {
-
-        ConexionDB conexion = new ConexionDB();
-
-        String sql = "DELETE FROM tareas WHERE id = ?";
-
-        try {
-
-            CallableStatement cs = conexion.conectar().prepareCall(sql);
-
-            cs.setInt(1, id);
-
-            cs.execute();
-
-            JOptionPane.showMessageDialog(null, "Tarea eliminada correctamente.");
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al eliminar la tarea.");
-            System.out.println("Error SQL: " + ex.toString());
-        } finally {
-            conexion.desconectar();
-        }
-    }
-        // LISTAR TAREAS POR ESTADO (para cada columna de la pizarra)
-    public DefaultTableModel listarPorEstado(Estado estado) {
-
-        ConexionDB conexion = new ConexionDB();
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        modelo.addColumn("ID");
-        modelo.addColumn("Descripción");
-        modelo.addColumn("Estado");
-        modelo.addColumn("Prioridad");
-        modelo.addColumn("Responsable");
-
-        String datos[] = new String[5];
-
-        String sql = "SELECT * FROM tareas WHERE estado = ?";
-
-        try {
-            CallableStatement cs = conexion.conectar().prepareCall(sql);
-            cs.setString(1, estado.toString());
-            ResultSet rs = cs.executeQuery();
-
-            while (rs.next()) {
-                datos[0] = String.valueOf(rs.getInt("id"));
-                datos[1] = rs.getString("descripcion");
-                datos[2] = rs.getString("estado");
-                datos[3] = rs.getString("prioridad");
-                datos[4] = rs.getString("responsable");
-
-                modelo.addRow(datos);
+            ps.setString(1, estado);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Object[] fila = new Object[5];
+                    fila[0] = rs.getInt("id");
+                    fila[1] = rs.getString("descripcion");
+                    fila[2] = rs.getString("estado");
+                    fila[3] = rs.getString("prioridad");
+                    fila[4] = rs.getString("responsable");
+                    modelo.addRow(fila);
+                }
             }
 
         } catch (SQLException ex) {
@@ -177,19 +48,102 @@ public class TareaAccesoD {
 
         return modelo;
     }
-        // ACTUALIZAR SOLO EL ESTADO DE UNA TAREA (mover entre columnas)
-    public void actualizarEstado(int id, Estado nuevoEstado) {
+
+    // agregar tarea
+    public void agregar(Tarea t) {
 
         ConexionDB conexion = new ConexionDB();
+        String sql = "INSERT INTO tareas (descripcion, estado, prioridad, responsable) VALUES (?, ?, ?, ?)";
 
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, t.getDescripcion());
+            ps.setString(2, t.getEstado());
+            ps.setString(3, t.getPrioridad());
+            ps.setString(4, t.getResponsable());
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Tarea agregada correctamente.");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al agregar la tarea.");
+            System.out.println("Error SQL: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+    }
+
+    // editar tarea (descripcion, prioridad, responsable) - no cambia estado aquí
+    public void editar(Tarea t) {
+
+        ConexionDB conexion = new ConexionDB();
+        String sql = "UPDATE tareas SET descripcion = ?, prioridad = ?, responsable = ? WHERE id = ?";
+
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, t.getDescripcion());
+            ps.setString(2, t.getPrioridad());
+            ps.setString(3, t.getResponsable());
+            ps.setInt(4, t.getId());
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Tarea modificada correctamente.");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al modificar la tarea.");
+            System.out.println("Error SQL: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+    }
+
+    // obtener tarea por id
+    public Tarea obtenerPorId(int id) {
+        ConexionDB conexion = new ConexionDB();
+        String sql = "SELECT * FROM tareas WHERE id = ?";
+        Tarea t = null;
+
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    t = new Tarea(
+                        rs.getInt("id"),
+                        rs.getString("descripcion"),
+                        rs.getString("estado"),
+                        rs.getString("prioridad"),
+                        rs.getString("responsable")
+                    );
+                }
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error obtenerPorId: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+
+        return t;
+    }
+
+    // actualizar estado (mover entre columnas)
+    public void actualizarEstado(int id, String nuevoEstado) {
+
+        ConexionDB conexion = new ConexionDB();
         String sql = "UPDATE tareas SET estado = ? WHERE id = ?";
 
-        try {
-            CallableStatement cs = conexion.conectar().prepareCall(sql);
-            cs.setString(1, nuevoEstado.toString());
-            cs.setInt(2, id);
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            cs.execute();
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, id);
+            ps.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Estado de la tarea actualizado.");
 
@@ -201,6 +155,27 @@ public class TareaAccesoD {
         }
     }
 
+    // eliminar tarea
+    public void eliminar(int id) {
 
+        ConexionDB conexion = new ConexionDB();
+        String sql = "DELETE FROM tareas WHERE id = ?";
+
+        try (Connection conn = conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Tarea eliminada correctamente.");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar la tarea.");
+            System.out.println("Error SQL: " + ex.toString());
+        } finally {
+            conexion.desconectar();
+        }
+    }
 }
+
 

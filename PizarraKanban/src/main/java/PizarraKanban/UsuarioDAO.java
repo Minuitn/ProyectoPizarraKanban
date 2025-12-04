@@ -1,13 +1,13 @@
-
 package PizarraKanban;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+// Acceso a datos para usuarios
 public class UsuarioDAO {
 
-    // Verificar login (username + hash)
+    // login
     public Usuario login(String username, String passwordHash) {
         String sql = "SELECT * FROM usuarios WHERE username = ? AND password_hash = ?";
         ConexionDB conexion = new ConexionDB();
@@ -16,46 +16,86 @@ public class UsuarioDAO {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, passwordHash);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return new Usuario(
-                    rs.getInt("id"),
-                    rs.getString("username"),
-                    rs.getString("password_hash"),
-                    rs.getString("rol")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("rol")
+                    );
+                }
             }
-
         } catch (Exception e) {
             System.out.println("Error login: " + e.toString());
         } finally {
             conexion.desconectar();
         }
 
-        return null; // login incorrecto
+        return null;
     }
 
-    // Registrar usuario (solo si ocupan crear nuevos)
-    public boolean registrar(String username, String passwordHash) {
-        String sql = "INSERT INTO usuarios (username, password_hash) VALUES (?, ?)";
-
+    // registrar con rol
+    public boolean registrarConRol(String username, String passwordHash, String rol) {
+        String sql = "INSERT INTO usuarios (username, password_hash, rol) VALUES (?, ?, ?)";
         ConexionDB conexion = new ConexionDB();
         Connection conn = conexion.conectar();
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, passwordHash);
-
+            ps.setString(3, rol);
             return ps.executeUpdate() > 0;
-
         } catch (Exception e) {
             System.out.println("Error registrar: " + e.toString());
             return false;
-
         } finally {
             conexion.desconectar();
         }
     }
+
+    // eliminar usuario por id
+    public boolean eliminarUsuario(int id) {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+        ConexionDB conexion = new ConexionDB();
+        Connection conn = conexion.conectar();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error eliminar usuario: " + e.toString());
+            return false;
+        } finally {
+            conexion.desconectar();
+        }
+    }
+
+    // obtener lista de usernames (para combo)
+    public List<String> obtenerUsernames() {
+        List<String> lista = new ArrayList<>();
+        String sql = "SELECT username FROM usuarios ORDER BY username ASC";
+        ConexionDB conexion = new ConexionDB();
+        Connection conn = conexion.conectar();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(rs.getString("username"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error obtenerUsernames: " + e.toString());
+        } finally {
+            conexion.desconectar();
+        }
+
+        // si no hay usuarios, devolver al menos un elemento para que el combo no rompa
+        if (lista.isEmpty()) lista.add("admin");
+        return lista;
+    }
 }
+
+
+
+
 

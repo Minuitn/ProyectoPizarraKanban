@@ -3,12 +3,15 @@ PizarraKanban\TareaController.class
 PizarraKanban\TareaAccesoD$1.class
 PizarraKanban\Usuario.class
 PizarraKanban\TareaAccesoD.class
+PizarraKanban\RegistrarUsuarioController.class
 PizarraKanban\Tarea.class
 PizarraKanban\TareaView.class
+PizarraKanban\RegistrarUsuarioView.class
 PizarraKanban\SeguridadUtil.class
 PizarraKanban\ConexionDB.class
+PizarraKanban\FormularioTareaView.class
 PizarraKanban\Main.class
 PizarraKanban\Estado.class
+PizarraKanban\TareaView$1.class
 PizarraKanban\UsuarioDAO.class
 PizarraKanban\LoginView.class
-PizarraKanban\TareaAccesoD$2.class

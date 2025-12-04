@@ -1,9 +1,11 @@
+
 package PizarraKanban;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Conexion a la base de datos
 public class ConexionDB {
 
     private Connection conn;
@@ -37,6 +39,7 @@ public class ConexionDB {
         }
     }
 }
+
 
 
 

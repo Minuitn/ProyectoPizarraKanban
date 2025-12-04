@@ -1,71 +1,136 @@
 
 package PizarraKanban;
-/**
- * @author shey
- */
+
 import javax.swing.*;
 import java.awt.*;
 
+// Vista principal de la pizarra Kanban
 public class TareaView extends JFrame {
 
     public JTable tablaPorHacer;
     public JTable tablaEnProgreso;
     public JTable tablaCompletado;
+
     public JButton btnMoverPorHacer;
     public JButton btnMoverEnProgreso;
     public JButton btnMoverCompletado;
+
     public JButton btnAgregar;
     public JButton btnActualizar;
+    public JButton btnEditar;
     public JButton btnEliminar;
+    public JButton btnCrearUsuario;
 
-    public TareaView() {
-        setTitle("Pizarra Kanban");
-        setSize(900, 500);
+    private Usuario usuario;
+
+    public TareaView(Usuario usuario) {
+        this.usuario = usuario;
+
+        // Aumentamos tamaño de la ventana principal
+        setTitle("Pizarra Kanban - Usuario: " + usuario.getUsername());
+        setSize(1280, 720); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10,10));
 
-        JPanel panelBotones = new JPanel();
-
+        // Panel superior
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         btnAgregar = new JButton("Agregar tarea");
         btnActualizar = new JButton("Actualizar");
+        btnEditar = new JButton("Editar tarea");
         btnEliminar = new JButton("Eliminar");
+        btnCrearUsuario = new JButton("Crear usuario");
 
-        panelBotones.add(btnAgregar);
-        panelBotones.add(btnActualizar);
-        panelBotones.add(btnEliminar);
+        panelTop.add(btnAgregar);
+        panelTop.add(btnActualizar);
+        panelTop.add(btnEditar);
+        panelTop.add(btnEliminar);
+        panelTop.add(btnCrearUsuario);
 
-        add(panelBotones, BorderLayout.NORTH);
+        add(panelTop, BorderLayout.NORTH);
 
-        JPanel panelTablas = new JPanel(new GridLayout(1, 3));
+        if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
+            btnCrearUsuario.setEnabled(false);
+            btnEliminar.setEnabled(false);
+        }
+
+        // Panel central más espacioso
+        JPanel panelCenter = new JPanel(new GridLayout(1, 3, 12, 12));
 
         tablaPorHacer = new JTable();
         tablaEnProgreso = new JTable();
         tablaCompletado = new JTable();
 
-        panelTablas.add(crearPanelColumna("Por hacer", tablaPorHacer));
-        panelTablas.add(crearPanelColumna("En progreso", tablaEnProgreso));
-        panelTablas.add(crearPanelColumna("Completado", tablaCompletado));
+        panelCenter.add(crearPanelColumna("Por hacer", tablaPorHacer, new Color(220, 240, 255)));
+        panelCenter.add(crearPanelColumna("En progreso", tablaEnProgreso, new Color(255, 245, 204)));
+        panelCenter.add(crearPanelColumna("Completado", tablaCompletado, new Color(220, 255, 220)));
 
-        add(panelTablas, BorderLayout.CENTER);
+        add(panelCenter, BorderLayout.CENTER);
 
+        // Panel inferior
+        JPanel panelBottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 14, 14));
         btnMoverPorHacer = new JButton("Mover a POR HACER");
         btnMoverEnProgreso = new JButton("Mover a EN PROGRESO");
         btnMoverCompletado = new JButton("Mover a COMPLETADO");
 
-        JPanel panelMover = new JPanel();
-        panelMover.add(btnMoverPorHacer);
-        panelMover.add(btnMoverEnProgreso);
-        panelMover.add(btnMoverCompletado);
+        panelBottom.add(btnMoverPorHacer);
+        panelBottom.add(btnMoverEnProgreso);
+        panelBottom.add(btnMoverCompletado);
 
-        add(panelMover, BorderLayout.SOUTH);
+        add(panelBottom, BorderLayout.SOUTH);
+
+        aplicarRenderPorPrioridad(tablaPorHacer, 3);
+        aplicarRenderPorPrioridad(tablaEnProgreso, 3);
+        aplicarRenderPorPrioridad(tablaCompletado, 3);
     }
 
-    private JPanel crearPanelColumna(String titulo, JTable tabla) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel etiqueta = new JLabel(titulo, SwingConstants.CENTER);
-        panel.add(etiqueta, BorderLayout.NORTH);
-        panel.add(new JScrollPane(tabla), BorderLayout.CENTER);
-        return panel;
+    private JPanel crearPanelColumna(String titulo, JTable tabla, Color fondo) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(fondo);
+
+        JLabel lbl = new JLabel(titulo, SwingConstants.CENTER);
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 20)); // título más grande
+        lbl.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        tabla.setRowHeight(28); // filas más grandes para mejor visibilidad
+
+        p.add(lbl, BorderLayout.NORTH);
+        p.add(new JScrollPane(tabla), BorderLayout.CENTER);
+
+        return p;
+    }
+
+    private void aplicarRenderPorPrioridad(JTable tabla, int col) {
+        tabla.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                try {
+                    Object val = table.getValueAt(row, col);
+                    if (val != null) {
+                        String prioridad = val.toString().toUpperCase();
+                        switch (prioridad) {
+                            case "ALTA":  c.setBackground(new Color(255, 204, 203)); break;
+                            case "MEDIA": c.setBackground(new Color(255, 243, 205)); break;
+                            case "BAJA":  c.setBackground(new Color(220, 255, 220)); break;
+                            default:      c.setBackground(Color.WHITE);
+                        }
+                    }
+                } catch (Exception ex) {
+                    c.setBackground(Color.WHITE);
+                }
+
+                if (isSelected) 
+                    c.setBackground(c.getBackground().darker());
+
+                return c;
+            }
+        });
     }
 }
+

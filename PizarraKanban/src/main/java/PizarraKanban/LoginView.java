@@ -1,14 +1,15 @@
+
 package PizarraKanban;
 
 import javax.swing.*;
 import java.awt.*;
 
+// Vista Login con inputs y labels centrados correctamente
 public class LoginView extends JFrame {
 
     public JTextField txtUsuario;
     public JPasswordField txtPassword;
     public JButton btnLogin;
-    public JButton btnAgregarUsuario; 
 
     public LoginView() {
         try {
@@ -16,63 +17,58 @@ public class LoginView extends JFrame {
         } catch (Exception ignored) {}
 
         setTitle("Login - Pizarra Kanban");
-        setSize(380, 400); 
+        setSize(380, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        setLayout(new BorderLayout(40, 40));
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        // GridBag para centrar todo exacto
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        JLabel title = new JLabel("Pizarra Kanban", JLabel.CENTER);
-        title.setFont(title.getFont().deriveFont(24f));
-        centerPanel.add(title);
-        centerPanel.add(Box.createVerticalStrut(20));
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        centerPanel.add(new JLabel("Usuario:"));
+        // Título
+        JLabel title = new JLabel("Pizarra Kanban", SwingConstants.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(title, gbc);
+
+        // Label usuario
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+        gbc.gridx = 0;
+        panel.add(new JLabel("Usuario:"), gbc);
+
+        // Input usuario
+        gbc.gridx = 1;
         txtUsuario = new JTextField();
-        styleField(txtUsuario);
-        centerPanel.add(txtUsuario);
-        centerPanel.add(Box.createVerticalStrut(15));
+        txtUsuario.setPreferredSize(new Dimension(160, 28));
+        panel.add(txtUsuario, gbc);
 
-        centerPanel.add(new JLabel("Contraseña:"));
+        // Label contraseña
+        gbc.gridy++;
+        gbc.gridx = 0;
+        panel.add(new JLabel("Contraseña:"), gbc);
+
+        // Input contraseña
+        gbc.gridx = 1;
         txtPassword = new JPasswordField();
-        styleField(txtPassword);
-        centerPanel.add(txtPassword);
-        centerPanel.add(Box.createVerticalStrut(25));
+        txtPassword.setPreferredSize(new Dimension(160, 28));
+        panel.add(txtPassword, gbc);
 
+        // Botón login
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
         btnLogin = new JButton("Ingresar");
-        styleButton(btnLogin);
-        centerPanel.add(btnLogin);
-        centerPanel.add(Box.createVerticalStrut(10)); // espaciado entre botones
+        btnLogin.setBackground(new Color(0, 122, 204));
+        btnLogin.setForeground(Color.WHITE);
+        panel.add(btnLogin, gbc);
 
-        // Botón Agregar Usuario
-        btnAgregarUsuario = new JButton("Agregar Usuario");
-        styleButtonSecondary(btnAgregarUsuario);
-        centerPanel.add(btnAgregarUsuario);
-
-        add(centerPanel, BorderLayout.CENTER);
-    }
-
-    private void styleField(JTextField field) {
-        field.setFont(new Font("Segoe UI", 0, 14));
-        field.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200)),
-            BorderFactory.createEmptyBorder(10, 12, 10, 12)));
-    }
-
-    private void styleButton(JButton button) {
-        button.setFont(new Font("Segoe UI", 1, 14));
-        button.setBackground(new Color(0, 123, 255));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-    }
-
-    private void styleButtonSecondary(JButton button) {
-        button.setFont(new Font("Segoe UI", 1, 14));
-        button.setBackground(new Color(108, 117, 125)); // color gris azulado
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
+        add(panel);
     }
 }

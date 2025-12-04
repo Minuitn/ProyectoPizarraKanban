@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
+// Controlador del login
 public class LoginController implements ActionListener {
 
     private LoginView vista;
@@ -13,26 +14,20 @@ public class LoginController implements ActionListener {
     public LoginController(LoginView vista) {
         this.vista = vista;
         this.dao = new UsuarioDAO();
-        vista.btnLogin.addActionListener(this);
+        this.vista.btnLogin.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         String user = vista.txtUsuario.getText().trim();
-        String pass = new String(vista.txtPassword.getPassword());
+        String pass = new String(vista.txtPassword.getPassword()).trim();
 
         if (user.isEmpty() || pass.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debe completar todos los campos.");
             return;
         }
 
-        // GENERAMOS EL HASH
         String hash = SeguridadUtil.hashSHA256(pass);
-
-        // DEBUG: imprimirlo para ver si coincide con el de la BD
-        System.out.println("HASH INTRODUCIDO = " + hash); // <--- ESTE ES EL PASO B
-
         Usuario u = dao.login(user, hash);
 
         if (u == null) {
@@ -42,12 +37,14 @@ public class LoginController implements ActionListener {
 
         JOptionPane.showMessageDialog(null, "Bienvenido " + u.getUsername());
 
-        // Abrimos la aplicación original
-        TareaView vistaTareas = new TareaView();
-        TareaController controller = new TareaController(vistaTareas);
+        // Abrir pizarra con el usuario autenticado
+        TareaView vistaTareas = new TareaView(u);
+        TareaController controller = new TareaController(vistaTareas, u);
         vistaTareas.setVisible(true);
 
         vista.dispose();
     }
 }
+
+
 
