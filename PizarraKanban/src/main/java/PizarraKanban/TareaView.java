@@ -1,4 +1,3 @@
-
 package PizarraKanban;
 
 import javax.swing.*;
@@ -26,15 +25,15 @@ public class TareaView extends JFrame {
     public TareaView(Usuario usuario) {
         this.usuario = usuario;
 
-        // Aumentamos tamaño de la ventana principal
         setTitle("Pizarra Kanban - Usuario: " + usuario.getUsername());
-        setSize(1280, 720); 
+        setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10,10));
 
-        // Panel superior
+        // PANEL SUPERIOR
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
         btnAgregar = new JButton("Agregar tarea");
         btnActualizar = new JButton("Actualizar");
         btnEditar = new JButton("Editar tarea");
@@ -54,7 +53,7 @@ public class TareaView extends JFrame {
             btnEliminar.setEnabled(false);
         }
 
-        // Panel central más espacioso
+        // PANEL CENTRAL
         JPanel panelCenter = new JPanel(new GridLayout(1, 3, 12, 12));
 
         tablaPorHacer = new JTable();
@@ -67,7 +66,7 @@ public class TareaView extends JFrame {
 
         add(panelCenter, BorderLayout.CENTER);
 
-        // Panel inferior
+        // PANEL INFERIOR
         JPanel panelBottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 14, 14));
         btnMoverPorHacer = new JButton("Mover a POR HACER");
         btnMoverEnProgreso = new JButton("Mover a EN PROGRESO");
@@ -79,27 +78,53 @@ public class TareaView extends JFrame {
 
         add(panelBottom, BorderLayout.SOUTH);
 
+        // Fondo general de ventana
+        getContentPane().setBackground(new Color(245, 245, 245));
+
+        // ESTILOS DE BOTONES
+        estilizarBoton(btnAgregar, new Color(0, 122, 255));
+        estilizarBoton(btnActualizar, new Color(0, 170, 0));
+        estilizarBoton(btnEditar, new Color(255, 153, 0));
+        estilizarBoton(btnEliminar, new Color(200, 0, 0));
+        estilizarBoton(btnCrearUsuario, new Color(100, 100, 100));
+
+        estilizarBoton(btnMoverPorHacer, new Color(0, 122, 255));
+        estilizarBoton(btnMoverEnProgreso, new Color(255, 153, 0));
+        estilizarBoton(btnMoverCompletado, new Color(0, 170, 0));
+
+        // Render de prioridad
         aplicarRenderPorPrioridad(tablaPorHacer, 3);
         aplicarRenderPorPrioridad(tablaEnProgreso, 3);
         aplicarRenderPorPrioridad(tablaCompletado, 3);
     }
 
+    // PANEL POR COLUMNA
     private JPanel crearPanelColumna(String titulo, JTable tabla, Color fondo) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(fondo);
 
         JLabel lbl = new JLabel(titulo, SwingConstants.CENTER);
-        lbl.setFont(new Font("Segoe UI", Font.BOLD, 20)); // título más grande
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 20));
         lbl.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        tabla.setRowHeight(28); // filas más grandes para mejor visibilidad
+        tabla.setRowHeight(28);
 
         p.add(lbl, BorderLayout.NORTH);
         p.add(new JScrollPane(tabla), BorderLayout.CENTER);
+        p.setBorder(BorderFactory.createTitledBorder(titulo.toUpperCase()));
 
         return p;
     }
 
+    // ESTILO DE BOTONES
+    private void estilizarBoton(JButton btn, Color colorFondo) {
+        btn.setBackground(colorFondo);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    }
+
+    // COLORES POR PRIORIDAD
     private void aplicarRenderPorPrioridad(JTable tabla, int col) {
         tabla.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
             @Override
@@ -125,7 +150,7 @@ public class TareaView extends JFrame {
                     c.setBackground(Color.WHITE);
                 }
 
-                if (isSelected) 
+                if (isSelected)
                     c.setBackground(c.getBackground().darker());
 
                 return c;
@@ -133,4 +158,3 @@ public class TareaView extends JFrame {
         });
     }
 }
-
