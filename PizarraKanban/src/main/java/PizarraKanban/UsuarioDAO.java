@@ -54,7 +54,7 @@ public class UsuarioDAO {
         }
     }
 
-    // eliminar usuario por id
+    // eliminar usuario por id (lo dejo porque ya estaba)
     public boolean eliminarUsuario(int id) {
         String sql = "DELETE FROM usuarios WHERE id = ?";
         ConexionDB conexion = new ConexionDB();
@@ -65,6 +65,24 @@ public class UsuarioDAO {
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Error eliminar usuario: " + e.toString());
+            return false;
+        } finally {
+            conexion.desconectar();
+        }
+    }
+
+    // *** NUEVO ***
+    // eliminar usuario por username (para el admin)
+    public boolean eliminarPorUsername(String username) {
+        String sql = "DELETE FROM usuarios WHERE username = ?";
+        ConexionDB conexion = new ConexionDB();
+        Connection conn = conexion.conectar();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Error al eliminar usuario (username): " + e.toString());
             return false;
         } finally {
             conexion.desconectar();
@@ -89,11 +107,11 @@ public class UsuarioDAO {
             conexion.desconectar();
         }
 
-        // si no hay usuarios, devolver al menos un elemento para que el combo no rompa
         if (lista.isEmpty()) lista.add("admin");
         return lista;
     }
 }
+
 
 
 

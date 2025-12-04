@@ -1,3 +1,4 @@
+
 package PizarraKanban;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ public class TareaView extends JFrame {
     public JButton btnEditar;
     public JButton btnEliminar;
     public JButton btnCrearUsuario;
+    public JButton btnEliminarUsuario; // NUEVO
 
     private Usuario usuario;
 
@@ -39,18 +41,21 @@ public class TareaView extends JFrame {
         btnEditar = new JButton("Editar tarea");
         btnEliminar = new JButton("Eliminar");
         btnCrearUsuario = new JButton("Crear usuario");
+        btnEliminarUsuario = new JButton("Eliminar usuario"); // NUEVO
 
         panelTop.add(btnAgregar);
         panelTop.add(btnActualizar);
         panelTop.add(btnEditar);
         panelTop.add(btnEliminar);
         panelTop.add(btnCrearUsuario);
+        panelTop.add(btnEliminarUsuario); // NUEVO
 
         add(panelTop, BorderLayout.NORTH);
 
         if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
             btnCrearUsuario.setEnabled(false);
             btnEliminar.setEnabled(false);
+            btnEliminarUsuario.setEnabled(false); // NUEVO
         }
 
         // PANEL CENTRAL
@@ -78,7 +83,7 @@ public class TareaView extends JFrame {
 
         add(panelBottom, BorderLayout.SOUTH);
 
-        // Fondo general de ventana
+        // Fondo general
         getContentPane().setBackground(new Color(245, 245, 245));
 
         // ESTILOS DE BOTONES
@@ -87,6 +92,7 @@ public class TareaView extends JFrame {
         estilizarBoton(btnEditar, new Color(255, 153, 0));
         estilizarBoton(btnEliminar, new Color(200, 0, 0));
         estilizarBoton(btnCrearUsuario, new Color(100, 100, 100));
+        estilizarBoton(btnEliminarUsuario, new Color(150, 0, 0)); // NUEVO
 
         estilizarBoton(btnMoverPorHacer, new Color(0, 122, 255));
         estilizarBoton(btnMoverEnProgreso, new Color(255, 153, 0));
@@ -98,7 +104,6 @@ public class TareaView extends JFrame {
         aplicarRenderPorPrioridad(tablaCompletado, 3);
     }
 
-    // PANEL POR COLUMNA
     private JPanel crearPanelColumna(String titulo, JTable tabla, Color fondo) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(fondo);
@@ -116,7 +121,6 @@ public class TareaView extends JFrame {
         return p;
     }
 
-    // ESTILO DE BOTONES
     private void estilizarBoton(JButton btn, Color colorFondo) {
         btn.setBackground(colorFondo);
         btn.setForeground(Color.WHITE);
@@ -124,7 +128,6 @@ public class TareaView extends JFrame {
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
     }
 
-    // COLORES POR PRIORIDAD
     private void aplicarRenderPorPrioridad(JTable tabla, int col) {
         tabla.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
             @Override
@@ -158,3 +161,4 @@ public class TareaView extends JFrame {
         });
     }
 }
+
