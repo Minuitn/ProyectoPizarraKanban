@@ -20,7 +20,7 @@ public class TareaView extends JFrame {
     public JButton btnEditar;
     public JButton btnEliminar;
     public JButton btnCrearUsuario;
-    public JButton btnEliminarUsuario; // NUEVO
+    public JButton btnEliminarUsuario;
 
     private Usuario usuario;
 
@@ -41,21 +41,21 @@ public class TareaView extends JFrame {
         btnEditar = new JButton("Editar tarea");
         btnEliminar = new JButton("Eliminar");
         btnCrearUsuario = new JButton("Crear usuario");
-        btnEliminarUsuario = new JButton("Eliminar usuario"); // NUEVO
+        btnEliminarUsuario = new JButton("Eliminar usuario");
 
         panelTop.add(btnAgregar);
         panelTop.add(btnActualizar);
         panelTop.add(btnEditar);
         panelTop.add(btnEliminar);
         panelTop.add(btnCrearUsuario);
-        panelTop.add(btnEliminarUsuario); // NUEVO
+        panelTop.add(btnEliminarUsuario);
 
         add(panelTop, BorderLayout.NORTH);
 
         if (!"ADMIN".equalsIgnoreCase(usuario.getRol())) {
             btnCrearUsuario.setEnabled(false);
             btnEliminar.setEnabled(false);
-            btnEliminarUsuario.setEnabled(false); // NUEVO
+            btnEliminarUsuario.setEnabled(false);
         }
 
         // PANEL CENTRAL
@@ -83,6 +83,13 @@ public class TareaView extends JFrame {
 
         add(panelBottom, BorderLayout.SOUTH);
 
+        // =========================
+        // CHAT DEL PROYECTO (NUEVO)
+        // =========================
+        ChatView chat = new ChatView(usuario);
+        chat.setPreferredSize(new Dimension(320, 0));
+        add(chat, BorderLayout.EAST);
+
         // Fondo general
         getContentPane().setBackground(new Color(245, 245, 245));
 
@@ -92,7 +99,7 @@ public class TareaView extends JFrame {
         estilizarBoton(btnEditar, new Color(255, 153, 0));
         estilizarBoton(btnEliminar, new Color(200, 0, 0));
         estilizarBoton(btnCrearUsuario, new Color(100, 100, 100));
-        estilizarBoton(btnEliminarUsuario, new Color(150, 0, 0)); // NUEVO
+        estilizarBoton(btnEliminarUsuario, new Color(150, 0, 0));
 
         estilizarBoton(btnMoverPorHacer, new Color(0, 122, 255));
         estilizarBoton(btnMoverEnProgreso, new Color(255, 153, 0));
@@ -161,4 +168,5 @@ public class TareaView extends JFrame {
         });
     }
 }
+
 

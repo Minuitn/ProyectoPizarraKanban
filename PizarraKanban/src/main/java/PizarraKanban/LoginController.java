@@ -37,12 +37,11 @@ public class LoginController implements ActionListener {
 
         JOptionPane.showMessageDialog(null, "Bienvenido " + u.getUsername());
 
-        // Abrir pizarra con el usuario autenticado
-        TareaView vistaTareas = new TareaView(u);
-        TareaController controller = new TareaController(vistaTareas, u);
-        vistaTareas.setVisible(true);
+        ProyectoView vistaProyectos = new ProyectoView(u);
+        vistaProyectos.setVisible(true);
 
-        vista.dispose();
+        vista.dispose(); // cierra login
+
     }
 }
 
