@@ -1,19 +1,19 @@
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\RegistrarUsuarioController.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaView.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ConexionDB.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Usuario.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\UsuarioDAO.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\MensajeChat.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\RegistrarUsuarioView.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaController.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\LoginView.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\FormularioTareaView.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\SeguridadUtil.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ChatDAO.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Estado.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\LoginController.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaAccesoD.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ProyectoView.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Main.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Tarea.java
-C:\Users\Usuario\Documents\NetBeansProjects\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ChatView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ChatDAO.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ChatView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ConexionDB.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Estado.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\FormularioTareaView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\LoginController.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\LoginView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Main.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\MensajeChat.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\ProyectoView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\RegistrarUsuarioController.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\RegistrarUsuarioView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\SeguridadUtil.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Tarea.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaAccesoD.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaController.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\TareaView.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\Usuario.java
+C:\Users\minui\OneDrive\Documentos\NetBeansProjects\Programación Cliente Servidor\Proyecto\ProyectoPizarraKanban\ProyectoPizarraKanban\PizarraKanban\src\main\java\PizarraKanban\UsuarioDAO.java
